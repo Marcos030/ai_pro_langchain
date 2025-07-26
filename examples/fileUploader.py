@@ -5,25 +5,28 @@ import pytesseract
 from PIL import Image
 import docx
 import streamlit as st
+from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
-from langchain.chat_models import ChatOpenAI
-from langchain.document_loaders import PyPDFLoader, TextLoader
+from langchain_community.chat_models import ChatOpenAI
+from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import Chroma
 from pypdf.errors import PdfReadError
-from openai.error import AuthenticationError, InvalidRequestError
+from openai import AuthenticationError, BadRequestError
+
+# Carregar variáveis de ambiente
+load_dotenv('config.env')
 
 # Adicionar a imagem no cabeçalho
 image_url = "https://cienciadosdados.com/images/CINCIA_DOS_DADOS_4.png"
-st.image(image_url, use_column_width=True)
+st.image(image_url, use_container_width=True)
 
 # Adicionar o nome do aplicativo
 st.subheader("Q&A com IA - PLN usando LangChain")
 
 # Componentes interativos
 file_input = st.file_uploader("Upload a file", type=['pdf', 'txt', 'csv', 'docx', 'jpeg', 'png'])
-openaikey = st.text_input("Enter your OpenAI API Key", type='password')
 prompt = st.text_area("Enter your questions", height=160)
 run_button = st.button("Run!")
 
@@ -89,7 +92,7 @@ def qa(file_path, file_type, query, chain_type, k):
     except AuthenticationError as e:
         st.error(f"Authentication error: {e}")
         return None
-    except InvalidRequestError as e:
+    except BadRequestError as e:
         st.error(f"Invalid request error: {e}")
         return None
 
@@ -104,25 +107,27 @@ def display_result(result):
             st.markdown(doc.page_content)
 
 # Execução do app
-if run_button and file_input and openaikey and prompt:
+if run_button and file_input and prompt:
     with st.spinner("Running QA..."):
         # Salvar o arquivo em um local temporário
         temp_file_path = os.path.join(tempfile.gettempdir(), file_input.name)
         with open(temp_file_path, "wb") as temp_file:
             temp_file.write(file_input.read())
 
-        # Configurar a chave de API do OpenAI
-        os.environ["OPENAI_API_KEY"] = openaikey
-
-        # Verificar se a chave de API é válida
-        try:
-            # Testar a chave de API com uma chamada simples
-            embeddings = OpenAIEmbeddings()
-            embeddings.embed_documents(["test"])
-        except AuthenticationError as e:
-            st.error(f"Invalid OpenAI API Key: {e}")
+        # Verificar se a chave de API está configurada
+        api_key = os.getenv('OPENAI_API_KEY')
+        if not api_key:
+            st.error("OpenAI API Key não encontrada no arquivo config.env")
         else:
-            # Executar a função de perguntas e respostas
-            result = qa(temp_file_path, file_input.type, prompt, select_chain_type, select_k)
-            # Exibir o resultado
-            display_result(result)
+            # Verificar se a chave de API é válida
+            try:
+                # Testar a chave de API com uma chamada simples
+                embeddings = OpenAIEmbeddings()
+                embeddings.embed_documents(["test"])
+            except AuthenticationError as e:
+                st.error(f"Chave da API OpenAI inválida: {e}")
+            else:
+                # Executar a função de perguntas e respostas
+                result = qa(temp_file_path, file_input.type, prompt, select_chain_type, select_k)
+                # Exibir o resultado
+                display_result(result)

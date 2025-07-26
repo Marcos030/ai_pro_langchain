@@ -23,6 +23,7 @@ ai_pro_langchain/
 └── examples/           # Exemplos adicionais
     ├── __init__.py
     ├── firstAgent.py   # Exemplo de uso do agente Wikipedia + Math
+    ├── fileUploader.py # Aplicação Streamlit para Q&A com documentos
     └── agents/         # Código dos agentes reutilizáveis
         ├── __init__.py
         └── wiki_math_agent.py # Agente Wikipedia + Math reutilizável
@@ -46,6 +47,9 @@ ai_pro_langchain/
    
    # Exemplo do agente
    python examples/firstAgent.py
+   
+   # Aplicação Streamlit (Q&A com documentos)
+   streamlit run examples/fileUploader.py
    ```
 
 ## Exemplos
@@ -55,6 +59,9 @@ Exemplo básico que utiliza o ChatGPT para gerar uma frase curta baseada na cor 
 
 ### First Agent (examples/firstAgent.py)
 Exemplo de uso do agente zero-shot com tools do Wikipedia e llm-math. Demonstra como usar agentes reutilizáveis para responder perguntas sobre inteligência artificial.
+
+### File Uploader (examples/fileUploader.py)
+Aplicação Streamlit completa para Q&A com documentos. Suporta upload de PDF, TXT, CSV, DOCX e imagens (JPEG/PNG) com OCR. Interface web interativa para análise inteligente de documentos. Utiliza automaticamente a chave da OpenAI do arquivo config.env.
 
 ## Tecnologias Utilizadas
 
