@@ -24,6 +24,7 @@ ai_pro_langchain/
     ├── __init__.py
     ├── firstAgent.py   # Exemplo de uso do agente Wikipedia + Math
     ├── fileUploader.py # Aplicação Streamlit para Q&A com documentos
+    ├── headline_creator.py # Criador de títulos e roteiros para YouTube
     └── agents/         # Código dos agentes reutilizáveis
         ├── __init__.py
         └── wiki_math_agent.py # Agente Wikipedia + Math reutilizável
@@ -50,6 +51,9 @@ ai_pro_langchain/
    
    # Aplicação Streamlit (Q&A com documentos)
    streamlit run examples/fileUploader.py
+   
+   # Criador de títulos para YouTube
+   streamlit run examples/headline_creator.py
    ```
 
 ## Exemplos
@@ -62,6 +66,9 @@ Exemplo de uso do agente zero-shot com tools do Wikipedia e llm-math. Demonstra 
 
 ### File Uploader (examples/fileUploader.py)
 Aplicação Streamlit completa para Q&A com documentos. Suporta upload de PDF, TXT, CSV, DOCX e imagens (JPEG/PNG) com OCR. Interface web interativa para análise inteligente de documentos. Utiliza automaticamente a chave da OpenAI do arquivo config.env.
+
+### Headline Creator (examples/headline_creator.py)
+Criador de títulos e roteiros para YouTube usando LangChain e pesquisa do Google via API Serper. Gera títulos SEO-friendly e roteiros completos baseados em pesquisas atuais. Interface Streamlit intuitiva para criadores de conteúdo.
 
 ## Tecnologias Utilizadas
 
